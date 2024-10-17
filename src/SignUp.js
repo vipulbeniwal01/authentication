@@ -83,7 +83,7 @@ function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Sign Up</button>
+        <button onClick={handleSignUp} type="submit">Sign Up</button>
       </form>
       <p>Or</p>
       <button onClick={handleGoogleSignUp} className="google-signup-button">
