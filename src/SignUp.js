@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, db } from './firebase';
+import { auth, db, googleProvider } from './firebase';
 import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
@@ -33,6 +33,31 @@ function SignUp() {
     }
   };
 
+  // Google Sign-up function
+  const handleGoogleSignUp = async () => {
+    try {
+      const result = await auth.signInWithPopup(googleProvider);
+      const user = result.user;
+      const userRef = db.collection('users');
+      const snapshot = await userRef.where('email', '==', user.email).get();
+
+      // If the user doesn't exist in Firestore, create a new document for them
+      if (snapshot.empty) {
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid,
+          email: user.email,
+          username: user.displayName || 'Google User', // Default to 'Google User' if no displayName
+          createdAt: new Date(),
+        });
+      }
+      console.log('User signed up with Google');
+      navigate('/'); // Redirect to home page after sign-up
+    } catch (error) {
+      console.error('Error during Google sign-up: ', error.message);
+      alert('Error during Google sign-up: ' + error.message);
+    }
+  };
+
   return (
     <div className="signup-form">
       <h2>Sign Up</h2>
@@ -60,6 +85,15 @@ function SignUp() {
         />
         <button type="submit">Sign Up</button>
       </form>
+      <p>Or</p>
+      <button onClick={handleGoogleSignUp} className="google-signup-button">
+        <img
+          src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+          alt="Google logo"
+          className="google-logo"
+        />
+        Sign Up with Google
+      </button>
       <p>Already have an account? <a href="/login">Log In</a></p>
     </div>
   );

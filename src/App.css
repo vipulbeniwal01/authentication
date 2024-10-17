@@ -37,10 +37,36 @@ button:hover {
 }
 
 a {
-  color: #007bff;
+  color: #007bff; 
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+
+.google-signup-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8b4b4; /* Google blue */
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.google-logo {
+  width: 25px; /* You can adjust the size as needed */
+  height: 25px;
+  margin-right: 10px;
+}
+
+.google-signup-button:hover {
+  background-color: #f0816f;
 }
