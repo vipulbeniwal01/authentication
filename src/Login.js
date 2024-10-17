@@ -65,7 +65,7 @@ function Login() {
           className="google-logo"
         />
         Log In with Google</button>
-      <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+      <p>Don't have an account? <a href="/">Sign Up</a></p>
     </div>
   );
 }
