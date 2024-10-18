@@ -22,4 +22,39 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider(); // Google Provider
 
-export { auth, db, googleProvider };
+// Function to add authenticated user to Firestore
+const addUserToFirestore = async (user) => {
+    const userRef = db.collection('users').doc(user.uid);
+    const doc = await userRef.get();
+    if (!doc.exists) {
+        // Store user details if not already present
+        await userRef.set({
+            displayName: user.displayName,
+            email: user.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+};
+
+// Google Sign-In function
+const signInWithGoogle = async () => {
+    try {
+        const result = await auth.signInWithPopup(googleProvider);
+        const user = result.user;
+        // Add user to Firestore after successful sign-in
+        await addUserToFirestore(user);
+    } catch (error) {
+        console.error("Error signing in with Google: ", error);
+    }
+};
+
+// Sign-Out function
+const signOut = () => {
+    auth.signOut().then(() => {
+        console.log('User signed out');
+    }).catch((error) => {
+        console.error('Error signing out: ', error);
+    });
+};
+
+export { auth, db, googleProvider, signInWithGoogle, signOut };
